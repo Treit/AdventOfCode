@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DayTwo": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\src\\github\\Treit\\AdventOfCode\\2020\\DayTwo\\input.txt",
+      "sqlDebugging": true
+    }
+  }
+}
