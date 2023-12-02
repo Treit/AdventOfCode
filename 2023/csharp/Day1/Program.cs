@@ -1,4 +1,6 @@
-﻿var inputfile = args.Any(arg => arg.Contains("test")) ? "testinput.txt" : "input.txt";
+﻿using System.Diagnostics;
+
+var inputfile = args.Any(arg => arg.Contains("test")) ? "testinput.txt" : "input.txt";
 var input = File.ReadAllLines(inputfile);
 
 if (args.Any(arg => arg.Contains("2")))
@@ -42,7 +44,7 @@ void Part1(string[] input)
 void Part2(string[] input)
 {
     var sum = 0;
-
+    var sw = Stopwatch.StartNew();
     foreach (var tmp in input)
     {
         var first = "";
@@ -69,6 +71,7 @@ void Part2(string[] input)
 
     }
 
+    Console.WriteLine(sw.ElapsedMilliseconds);
     Console.WriteLine(sum);
 }
 
