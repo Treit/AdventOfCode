@@ -12,7 +12,10 @@
 #else
             var b = new Benchmark();
             b.GlobalSetup();
-            Console.WriteLine(b.Day2Part2());
+            Console.WriteLine($"Day 1, part 1 answer: {b.Day2Part1()}");
+            Console.WriteLine($"Day 2, part 1 optimized answer: {b.Day2Part1Optimized()}");
+            Console.WriteLine($"Day 2, part 2 answer: {b.Day2Part2()}");
+            Console.WriteLine($"Day 2, part 2 optimized answer: {b.Day2Part2Optimized()}");
 #endif
         }
     }

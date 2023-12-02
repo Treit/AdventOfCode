@@ -4,6 +4,7 @@
     using BenchmarkDotNet.Diagnosers;
     using System.Text.RegularExpressions;
     using System.IO;
+    using System;
 
     [MemoryDiagnoser]
     public class Benchmark
@@ -85,5 +86,147 @@
             return answer;
         }
 
+        [Benchmark]
+        public int Day2Part1Optimized()
+        {
+            var answer = 0;
+            var gameId = 1;
+
+            foreach (var line in _input)
+            {
+                var maxGreenSeen = 0;
+                var maxRedSeen = 0;
+                var maxBlueSeen = 0;
+
+                var span = line.AsSpan();
+                span = span.Slice(span.IndexOf(':') + 2);
+                var curr = 0;
+
+                foreach (var c in span)
+                {
+                    if (char.IsAsciiDigit(c))
+                    {
+                        if (curr != 0)
+                        {
+                            curr *= 10;
+                            curr += c - '0';
+                        }
+                        else
+                        {
+                            curr = c - '0';
+                        }
+                    }
+                    else if (c == 'b')
+                    {
+                        if (curr > maxBlueSeen)
+                        {
+                            maxBlueSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                    else if (c == 'r')
+                    {
+                        if (curr > maxRedSeen)
+                        {
+                            maxRedSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                    else if (c == 'g')
+                    {
+                        if (curr > maxGreenSeen)
+                        {
+                            maxGreenSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                }
+
+                var valid = (maxRedSeen, maxGreenSeen, maxBlueSeen) switch
+                {
+                    (> 12, _, _) => false,
+                    (_, > 13, _) => false,
+                    (_, _, > 14) => false,
+                    _ => true
+                };
+
+                if (valid)
+                {
+                    answer += gameId;
+                }
+
+                gameId++;
+            }
+
+            return answer;
+        }
+
+        [Benchmark]
+        public int Day2Part2Optimized()
+        {
+            var answer = 0;
+
+            foreach (var line in _input)
+            {
+                var maxGreenSeen = 0;
+                var maxRedSeen = 0;
+                var maxBlueSeen = 0;
+
+                var span = line.AsSpan();
+                span = span.Slice(span.IndexOf(':') + 2);
+                var curr = 0;
+
+                foreach (var c in span)
+                {
+                    if (char.IsAsciiDigit(c))
+                    {
+                        if (curr != 0)
+                        {
+                            curr *= 10;
+                            curr += c - '0';
+                        }
+                        else
+                        {
+                            curr = c - '0';
+                        }
+                    }
+                    else if (c == 'b')
+                    {
+                        if (curr > maxBlueSeen)
+                        {
+                            maxBlueSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                    else if (c == 'r')
+                    {
+                        if (curr > maxRedSeen)
+                        {
+                            maxRedSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                    else if (c == 'g')
+                    {
+                        if (curr > maxGreenSeen)
+                        {
+                            maxGreenSeen = curr;
+                        }
+
+                        curr = 0;
+                    }
+                }
+
+                var power = maxGreenSeen * maxRedSeen * maxBlueSeen;
+                answer += power;
+            }
+
+            return answer;
+        }
     }
 }
