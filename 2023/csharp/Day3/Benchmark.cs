@@ -11,14 +11,16 @@
     public class Benchmark
     {
         string[] _input;
+        bool _debugMode;
 
         public Benchmark()
         {
         }
 
-        public Benchmark(string inputFile)
+        public Benchmark(string inputFile, bool debugMode = false)
         {
             _input = File.ReadAllLines(inputFile);
+            _debugMode = debugMode;
         }
 
         [GlobalSetup]
@@ -84,6 +86,7 @@
                         currLength = 0;
                     }
 
+#if DEBUG
                     var coords = (row, col);
                     if (coloredPoints.Contains(coords))
                     {
@@ -95,7 +98,7 @@
                     }
 
                     Console.Write(c);
-
+#endif
                     col++;
                 }
 
@@ -111,7 +114,9 @@
                 }
 
                 currLength = 0;
+#if DEBUG
                 Console.WriteLine();
+#endif
 
                 row++;
             }
@@ -177,6 +182,7 @@
                         currLength = 0;
                     }
 
+#if DEBUG
                     var coords = (row, col);
                     if (coloredPoints.ContainsKey(coords))
                     {
@@ -188,7 +194,7 @@
                     }
 
                     Console.Write(c);
-
+#endif
                     col++;
                 }
 
@@ -204,7 +210,9 @@
                 }
 
                 currLength = 0;
+#if DEBUG
                 Console.WriteLine();
+#endif
 
                 row++;
             }
