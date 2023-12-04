@@ -1,17 +1,11 @@
-﻿using System.Numerics;
-using System.Runtime.CompilerServices;
-using System;
-
-namespace Test
+﻿namespace Test
 {
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Diagnosers;
-    using System.Text.RegularExpressions;
-    using System.IO;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
-    using System.Collections.Immutable;
 
     [MemoryDiagnoser]
     public class Benchmark
@@ -36,38 +30,38 @@ namespace Test
         [Benchmark]
         public string Day3Part1()
         {
-            var answer = 0;
-            var x = 0;
-            var coloredPoints = new HashSet<(int X, int Y)>();
+            var answer = 0L;
+            var row = 0;
+            var coloredPoints = new HashSet<(int row, int col)>();
 
             // First pass, color all neighbors of symbols.
             foreach (var line in _input)
             {
-                int y = 0;
+                int col = 0;
                 foreach (var c in line)
                 {
-                    var coords = (x, y);
+                    var coords = (row, col);
 
                     if (IsSymbol(c))
                     {
                         ColorPoints(coords, coloredPoints);
                     }
 
-                    y++;
+                    col++;
                 }
-                x++;
+                row++;
             }
 
             // Second pass, determine each number that is colored.
-            x = 0;
+            row = 0;
             var currBuffer = new char[8].AsSpan();
             var currLength = 0;
-            bool mark = false;
-            var numsToAdd = new List<int>();
+            var mark = false;
+            var numsToAdd = new List<long>();
 
             foreach (var line in _input)
             {
-                int y = 0;
+                var col = 0;
                 foreach (var c in line)
                 {
                     if (char.IsAsciiDigit(c))
@@ -80,9 +74,9 @@ namespace Test
                         if (currLength > 0)
                         {
                             var num = int.Parse(currBuffer.Slice(0, currLength));
-                            for (int i = y - currLength; i < y; i++)
+                            for (int i = col - currLength; i < col; i++)
                             {
-                                var toCheck = (x, i);
+                                var toCheck = (row, i);
                                 if (coloredPoints.Contains(toCheck))
                                 {
                                     mark = true;
@@ -95,17 +89,17 @@ namespace Test
                         }
                     }
 
-                    var coords = (x, y);
+                    var coords = (row, col);
                     if (coloredPoints.Contains(coords))
                     {
                         Console.BackgroundColor = ConsoleColor.DarkBlue;
-                        Console.Write(c);
                     }
                     else
                     {
                         Console.ResetColor();
-                        Console.Write(c);
                     }
+
+                    Console.Write(c);
 
                     if (mark)
                     {
@@ -117,16 +111,14 @@ namespace Test
                         mark = false;
                     }
 
-                    y++;
+                    col++;
                 }
 
                 currLength = 0;
-
                 Console.WriteLine();
-                x++;
-            }
 
-            Console.WriteLine(numsToAdd.Max());
+                row++;
+            }
 
             answer = numsToAdd.Sum();
             return answer.ToString();
@@ -144,16 +136,16 @@ namespace Test
             return !char.IsAsciiDigit(c) && c != '.';
         }
 
-        private void ColorPoints((int X, int Y) symbolLocation, HashSet<(int X, int Y)> coloredPoints)
+        private void ColorPoints((int Row, int Col) symbolLocation, HashSet<(int Row, int Col)> coloredPoints)
         {
-            coloredPoints.Add((symbolLocation.X, symbolLocation.Y + 1)); // Right
-            coloredPoints.Add((symbolLocation.X - 1, symbolLocation.Y + 1)); // Up right
-            coloredPoints.Add((symbolLocation.X - 1, symbolLocation.Y)); // Up
-            coloredPoints.Add((symbolLocation.X - 1, symbolLocation.Y - 1)); // Up left
-            coloredPoints.Add((symbolLocation.X, symbolLocation.Y - 1)); // Left
-            coloredPoints.Add((symbolLocation.X + 1, symbolLocation.Y - 1)); // Down left
-            coloredPoints.Add((symbolLocation.X + 1, symbolLocation.Y)); // Down
-            coloredPoints.Add((symbolLocation.X + 1, symbolLocation.Y + 1)); // Down right
+            coloredPoints.Add((symbolLocation.Row, symbolLocation.Col + 1)); // Right
+            coloredPoints.Add((symbolLocation.Row - 1, symbolLocation.Col + 1)); // Up right
+            coloredPoints.Add((symbolLocation.Row - 1, symbolLocation.Col)); // Up
+            coloredPoints.Add((symbolLocation.Row - 1, symbolLocation.Col - 1)); // Up left
+            coloredPoints.Add((symbolLocation.Row, symbolLocation.Col - 1)); // Left
+            coloredPoints.Add((symbolLocation.Row + 1, symbolLocation.Col - 1)); // Down left
+            coloredPoints.Add((symbolLocation.Row + 1, symbolLocation.Col)); // Down
+            coloredPoints.Add((symbolLocation.Row + 1, symbolLocation.Col + 1)); // Down right
         }
-   }
+    }
 }
