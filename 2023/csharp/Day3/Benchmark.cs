@@ -64,29 +64,26 @@
                 var col = 0;
                 foreach (var c in line)
                 {
-                    if (char.IsAsciiDigit(c))
+                    if (currLength > 0 && (!char.IsAsciiDigit(c) || col + 1 == line.Length))
+                    {
+                        var num = int.Parse(currBuffer.Slice(0, currLength));
+                        for (int i = col - currLength; i < col; i++)
+                        {
+                            var toCheck = (row, i);
+                            if (coloredPoints.Contains(toCheck))
+                            {
+                                mark = true;
+                                numsToAdd.Add(num);
+                                break;
+                            }
+                        }
+
+                        currLength = 0;
+                    }
+                    else if (char.IsAsciiDigit(c))
                     {
                         currBuffer[currLength] = c;
                         currLength++;
-                    }
-                    else
-                    {
-                        if (currLength > 0)
-                        {
-                            var num = int.Parse(currBuffer.Slice(0, currLength));
-                            for (int i = col - currLength; i < col; i++)
-                            {
-                                var toCheck = (row, i);
-                                if (coloredPoints.Contains(toCheck))
-                                {
-                                    mark = true;
-                                    numsToAdd.Add(num);
-                                    break;
-                                }
-                            }
-
-                            currLength = 0;
-                        }
                     }
 
                     var coords = (row, col);
