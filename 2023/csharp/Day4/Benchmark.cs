@@ -104,6 +104,52 @@ namespace Test
             return answer.ToString();
         }
 
+        [Benchmark]
+        public string Day4Part2RecordStruct()
+        {
+            var answer = 0;
+            var cardindex = -1;
+            var cardList = new List<ScratchCardStruct>();
+            var cardQueue = new Queue<ScratchCardStruct>();
+
+            foreach (var line in _input)
+            {
+                cardindex++;
+                var loc = line.IndexOf(":");
+                var slice = line.AsSpan().Slice(loc + 2).Trim();
+                var normalized = slice.ToString().Replace(" | ", "|");
+                var parts = normalized.Split("|");
+                var winners = parts[0].Split(' ').ToHashSet();
+                var ours = parts[1].Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var wins = 0;
+                for (int i = 0; i < ours.Length; i++)
+                {
+                    if (winners.Contains(ours[i]))
+                    {
+                        wins++;
+                    }
+                }
+
+                var card = new ScratchCardStruct(cardindex, wins);
+                cardList.Add(card);
+                cardQueue.Enqueue(card);
+            }
+
+            while (cardQueue.Count > 0)
+            {
+                answer++;
+                var currentCard = cardQueue.Dequeue();
+                var winCount = currentCard.WinCount;
+                for (int i = currentCard.CardIndex + 1; i < currentCard.CardIndex + winCount + 1; i++)
+                {
+                    cardQueue.Enqueue(cardList[i]);
+                }
+            }
+
+            return answer.ToString();
+        }
+
         record ScratchCard(int CardIndex, int WinCount);
-   }
+        record struct ScratchCardStruct(int CardIndex, int WinCount);
+    }
 }
