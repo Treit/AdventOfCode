@@ -16,6 +16,7 @@
             Console.WriteLine($"Day 2, part 1 optimized answer: {b.Day2Part1Optimized()}");
             Console.WriteLine($"Day 2, part 2 answer: {b.Day2Part2()}");
             Console.WriteLine($"Day 2, part 2 optimized answer: {b.Day2Part2Optimized()}");
+            Console.WriteLine($"Day 2, part 2 viceroypenguin: {b.Day2ViceroyPenguin()}");
 #endif
         }
     }
