@@ -33,6 +33,11 @@ namespace Test
         [Benchmark]
         public string Day5Part1()
         {
+            foreach (var line in _input)
+            {
+                Console.WriteLine(line);
+            }
+
             var answer = 0;
             return answer.ToString();
         }
