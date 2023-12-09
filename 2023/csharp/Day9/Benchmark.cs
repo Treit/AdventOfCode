@@ -59,11 +59,12 @@ namespace Test
 
         long ProcessLine(string line, bool reverse)
         {
-            var nums = line.Split(" ").Select(x => long.Parse(x)).ToArray();
-            var sequence = reverse ? GenerateNextSequence(nums.Reverse().ToArray()) : GenerateNextSequence(nums.ToArray());
+            var nums = line.Split(" ").Select(x => long.Parse(x));
+            var sequence = reverse
+                ? GenerateNextSequence(nums.Reverse().ToArray())
+                : GenerateNextSequence(nums.ToArray());
+
             var answer = sequence[sequence.Length - 1];
-            sequence = reverse ? sequence.Reverse().ToArray() : sequence.ToArray();
-            Console.WriteLine(string.Join(',', sequence));
             return answer;
         }
 
@@ -74,11 +75,11 @@ namespace Test
                 return input;
             }
 
-            long[] result = new long[input.Length + 1];
-            Array.Copy(input, result, input.Length);
+            var tempResult = new long[input.Length - 1];
 
-            long[] tempResult = new long[input.Length - 1];
-            for (int i = 0; i < input.Length - 1; i++)
+            Array.Resize(ref input, input.Length + 1);
+
+            for (var i = 0; i < input.Length - 2; i++)
             {
                 var x = input[i];
                 var y = input[i + 1];
@@ -86,9 +87,9 @@ namespace Test
             }
 
             var next = GenerateNextSequence(tempResult);
-            result[result.Length - 1] = input[input.Length - 1] + next[next.Length - 1];
+            input[input.Length - 1] = input[input.Length - 2] + next[next.Length - 1];
 
-            return result;
+            return input;
         }
     }
 }
