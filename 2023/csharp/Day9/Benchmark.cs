@@ -87,7 +87,7 @@ namespace Test
             }
 
             var next = GenerateNextSequence(tempResult);
-            input[input.Length - 1] = input[input.Length - 2] + next[next.Length - 1];
+            input[^1] = input[^2] + next[^1];
 
             return input;
         }
