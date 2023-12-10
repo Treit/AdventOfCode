@@ -1,14 +1,9 @@
-﻿using System.Numerics;
-using System.Runtime.CompilerServices;
-using System;
-
-namespace Test
+﻿namespace Test
 {
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Diagnosers;
-    using System.Text.RegularExpressions;
-    using System.IO;
     using System;
+    using System.IO;
     using System.Linq;
 
     [MemoryDiagnoser]
