@@ -57,7 +57,7 @@ namespace Test
                 Console.WriteLine();
             }
 
-            var answer = Pipes.Walk(startPos, _input);
+            var answer = Pipes.WalkPartOne(startPos, _input);
 
             return answer.ToString();
         }
@@ -65,6 +65,7 @@ namespace Test
         [Benchmark]
         public string Day10Part2()
         {
+            using var sw = new StreamWriter(@"input2.txt");
             var startPos = (0, 0);
             var row = -1;
             var col = -1;
@@ -82,14 +83,21 @@ namespace Test
                         Console.BackgroundColor = ConsoleColor.Green;
                     }
 
+                    sw.Write(Pipes.SymbolMap[c]);
                     Console.Write(Pipes.SymbolMap[c]);
                     Console.ResetColor();
                 }
 
+                sw.WriteLine();
                 Console.WriteLine();
             }
 
             //var answer = Pipes.Walk(startPos, _input);
+            var positions = Pipes.GetAllPipeLocations(startPos, _input);
+            foreach (var pos in positions)
+            {
+                Console.WriteLine(pos);
+            }
 
             var answer = 0;
             return answer.ToString();

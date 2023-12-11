@@ -35,7 +35,7 @@
 
             if (runDay1)
             {
-                Console.WriteLine($"Day 10, part 1 answer: {b.Day10Part1()}");
+                //Console.WriteLine($"Day 10, part 1 answer: {b.Day10Part1()}");
             }
 
             if (runDay2)
