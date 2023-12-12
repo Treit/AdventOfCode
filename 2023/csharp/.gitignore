@@ -1,5 +1,5 @@
-.bak
-.sln
+*.bak
+*.sln
 input.txt
 testinput.txt
 ## Ignore Visual Studio temporary files, build results, and
