@@ -6,9 +6,7 @@ public class Day_01_Original : IPuzzle
     public (string, string) Solve(PuzzleInput input)
     {
         var part1 = Part1(input.Lines);
-
         var part2 = Part2(input.Lines);
-
         return (part1, part2);
     }
 
@@ -26,9 +24,7 @@ public class Day_01_Original : IPuzzle
     public static string Part2(string[] input)
     {
         var (firstList, secondList) = GetLists(input);
-
         var grouped = secondList.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
-
         var totalSimilarityScore = firstList.Select(x => x * (grouped.TryGetValue(x, out var y) ? y : 0)).Sum();
 
         return totalSimilarityScore.ToString();
