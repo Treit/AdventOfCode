@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.Configuration;
 
 namespace AdventOfCode.Runner;
@@ -30,10 +30,11 @@ public sealed class PuzzleInputProvider
             })
         {
             BaseAddress = baseAddress,
+            /*
             DefaultRequestHeaders =
             {
                 { "User-Agent", ".NET/7.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
-            },
+            },*/
         };
     }
 
