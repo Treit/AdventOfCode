@@ -3,7 +3,7 @@
     "AdventOfCode.Runner": {
       "commandName": "Project",
       "workingDirectory": "$(ProjectDir)",
-      "commandLineArgs": "-y 2024 -d 1"
+      "commandLineArgs": "-y 2024 -d 2"
     }
   }
 }
