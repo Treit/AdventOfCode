@@ -17,16 +17,9 @@ public partial class Day_03_Original : IPuzzle
     {
         var result = 0UL;
         var re = PuzzleRegex();
-        foreach (var match in input.Select(line => re.Matches(line)).SelectMany(match => match))
+        foreach (var match in input.Select(line => re.Matches(line)).SelectMany(match => match).Where(match => match.Value.StartsWith("mul")))
         {
-            if (!match.Value.StartsWith("mul"))
-            {
-                continue;
-            }
-
-            var numA = ulong.Parse(match.Groups[2].Value);
-            var numB = ulong.Parse(match.Groups[3].Value);
-            result += numA * numB;
+            result += ulong.Parse(match.Groups[2].Value) * ulong.Parse(match.Groups[3].Value);
         }
 
         return result.ToString();
