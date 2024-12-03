@@ -1,7 +1,7 @@
 namespace AdventOfCode.Puzzles._2024;
 
-[Puzzle(2024, 03, CodeType.Original)]
-public partial class Day_03_Original : IPuzzle
+[Puzzle(2024, 03, CodeType.CleanedUp)]
+public partial class Day_03_Second : IPuzzle
 {
     [GeneratedRegex(@"(do\(\)|don't\(\))|mul\((\d+?),(\d+?)\)")]
     internal static partial Regex PuzzleRegex();
