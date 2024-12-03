@@ -1,8 +1,11 @@
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 03, CodeType.Original)]
-public class Day_03_Original : IPuzzle
+public partial class Day_03_Original : IPuzzle
 {
+    [GeneratedRegex(@"(do\(\)|don't\(\))|mul\((\d+?),(\d+?)\)")]
+    internal static partial Regex PuzzleRegex();
+
     public (string, string) Solve(PuzzleInput input)
     {
         var part1 = Part1(input.Lines);
@@ -12,18 +15,18 @@ public class Day_03_Original : IPuzzle
 
     public static string Part1(string[] input)
     {
-        var re = new Regex(@"mul\((\d+?),(\d+?)\)");
         var result = 0UL;
-
-        foreach (var line in input)
+        var re = PuzzleRegex();
+        foreach (var match in input.Select(line => re.Matches(line)).SelectMany(match => match))
         {
-            var matches = re.Matches(line);
-            foreach (Match match in matches)
+            if (!match.Value.StartsWith("mul"))
             {
-                var numA = ulong.Parse(match.Groups[1].Value);
-                var numB = ulong.Parse(match.Groups[2].Value);
-                result += numA * numB;
+                continue;
             }
+
+            var numA = ulong.Parse(match.Groups[2].Value);
+            var numB = ulong.Parse(match.Groups[3].Value);
+            result += numA * numB;
         }
 
         return result.ToString();
@@ -31,37 +34,20 @@ public class Day_03_Original : IPuzzle
 
     public static string Part2(string[] input)
     {
-        var re = new Regex(@"(do\(\)|don't\(\))|mul\((\d+?),(\d+?)\)");
-        var result = 0UL;
+        var (ok, result) = (true, 0UL);
+        var re = PuzzleRegex();
 
-        var ok = true;
-        foreach (var line in input)
+        foreach (var match in input.Select(line => re.Matches(line)).SelectMany(match => match))
         {
-            var matches = re.Matches(line);
-            foreach (Match match in matches)
+            (ok, result) = match.Value switch
             {
-                if (match.Value == "do()")
-                {
-                    ok = true;
-                }
-                else if (match.Value == "don't()")
-                {
-                    ok = false;
-                }
-                else
-                {
-                    var numA = ulong.Parse(match.Groups[2].Value);
-                    var numB = ulong.Parse(match.Groups[3].Value);
-
-                    if (ok)
-                    {
-                        result += numA * numB;
-                    }
-                }
-            }
+                "do()" => (true, result),
+                "don't()" => (false, result),
+                _ when ok => (ok, result += ulong.Parse(match.Groups[2].Value) * ulong.Parse(match.Groups[3].Value)),
+                _ => (ok, result),
+            };
         }
 
         return result.ToString();
-
     }
 }
