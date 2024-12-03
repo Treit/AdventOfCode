@@ -37,7 +37,6 @@ public class Day_03_Original : IPuzzle
         var ok = true;
         foreach (var line in input)
         {
-            Console.WriteLine(input);
             var matches = re.Matches(line);
             foreach (Match match in matches)
             {
