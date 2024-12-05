@@ -1,5 +1,4 @@
 using System.Data;
-using System.Text;
 
 namespace AdventOfCode.Puzzles._2024;
 
@@ -20,20 +19,7 @@ public class Day_05_Second : IPuzzle
 
         foreach (var update in updates)
         {
-            var valid = true;
-            for (var i = 0; i < update.Count; i++)
-            {
-                for (var j = i + 1; j < update.Count; j++)
-                {
-                    if (mustPrecedeDict.TryGetValue(update[i], out var mustPrecede))
-                    {
-                        if (mustPrecede.Contains(update[j]))
-                        {
-                            valid = false;
-                        }
-                    }
-                }
-            }
+            var valid = IsValid(mustPrecedeDict, update);
 
             if (valid)
             {
@@ -51,20 +37,7 @@ public class Day_05_Second : IPuzzle
         var invalidUpdates = new List<List<int>>();
         foreach (var update in updates)
         {
-            var valid = true;
-            for (var i = 0; i < update.Count; i++)
-            {
-                for (var j = i + 1; j < update.Count; j++)
-                {
-                    if (mustPrecedeDict.TryGetValue(update[i], out var mustPrecede))
-                    {
-                        if (mustPrecede.Contains(update[j]))
-                        {
-                            valid = false;
-                        }
-                    }
-                }
-            }
+            var valid = IsValid(mustPrecedeDict, update);
 
             if (!valid)
             {
@@ -72,36 +45,56 @@ public class Day_05_Second : IPuzzle
             }
         }
 
-        var tmp = 0;
         foreach (var invalidUpdate in invalidUpdates)
         {
-            var valid = false;
-            while (!valid)
-            {
-                // LOL 🤪
-                for (var i = 0; i < invalidUpdate.Count; i++)
-                {
-                    valid = true;
-                    for (var j = i + 1; j < invalidUpdate.Count; j++)
-                    {
-                        if (mustPrecedeDict.TryGetValue(invalidUpdate[i], out var mustPrecede))
-                        {
-                            if (mustPrecede.Contains(invalidUpdate[j]))
-                            {
-                                valid = false;
-                                tmp = invalidUpdate[i];
-                                invalidUpdate[i] = invalidUpdate[j];
-                                invalidUpdate[j] = tmp;
-                            }
-                        }
-                    }
-                }
-            }
-
+            SortUpdate(mustPrecedeDict, invalidUpdate);
             result += invalidUpdate[invalidUpdate.Count / 2];
         }
 
         return result.ToString();
+    }
+
+    private static void SortUpdate(Dictionary<int, HashSet<int>> mustPrecedeDict, List<int> invalidUpdate)
+    {
+        var valid = false;
+        while (!valid)
+        {
+            for (var i = 0; i < invalidUpdate.Count; i++)
+            {
+                valid = true;
+                for (var j = i + 1; j < invalidUpdate.Count; j++)
+                {
+                    if (mustPrecedeDict.TryGetValue(invalidUpdate[i], out var mustPrecede))
+                    {
+                        if (mustPrecede.Contains(invalidUpdate[j]))
+                        {
+                            valid = false;
+                            (invalidUpdate[j], invalidUpdate[i]) = (invalidUpdate[i], invalidUpdate[j]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static bool IsValid(Dictionary<int, HashSet<int>> mustPrecedeDict, List<int> update)
+    {
+        var valid = true;
+        for (var i = 0; i < update.Count; i++)
+        {
+            for (var j = i + 1; j < update.Count; j++)
+            {
+                if (mustPrecedeDict.TryGetValue(update[i], out var mustPrecede))
+                {
+                    if (mustPrecede.Contains(update[j]))
+                    {
+                        valid = false;
+                    }
+                }
+            }
+        }
+
+        return valid;
     }
 
     private static (Dictionary<int, HashSet<int>>, List<List<int>>) ParseData(string[] input)
