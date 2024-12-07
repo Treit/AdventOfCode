@@ -1,7 +1,3 @@
-using System.Data;
-using System.Runtime.ExceptionServices;
-using System.Text;
-
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 07, CodeType.Original)]
