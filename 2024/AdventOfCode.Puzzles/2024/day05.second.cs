@@ -2,7 +2,7 @@ using System.Data;
 
 namespace AdventOfCode.Puzzles._2024;
 
-[Puzzle(2024, 05, CodeType.Original)]
+[Puzzle(2024, 05, CodeType.CleanedUp)]
 public class Day_05_Second : IPuzzle
 {
     public (string, string) Solve(PuzzleInput input)
