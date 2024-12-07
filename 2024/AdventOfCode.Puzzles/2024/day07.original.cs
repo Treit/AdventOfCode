@@ -16,34 +16,12 @@ public class Day_07_Original : IPuzzle
 
     public static string Part1(string[] input)
     {
-        input = """
-        190: 10 19
-        3267: 81 40 27
-        83: 17 5
-        156: 15 6
-        7290: 6 8 6 15
-        161011: 16 10 13
-        192: 17 8 14
-        21037: 9 7 18 13
-        292: 11 6 16 20
-        """.Split(Environment.NewLine);
         var overallResult = Solve(input, ['+', '*']);
         return overallResult.ToString();
     }
 
     public static string Part2(string[] input)
     {
-        input = """
-        190: 10 19
-        3267: 81 40 27
-        83: 17 5
-        156: 15 6
-        7290: 6 8 6 15
-        161011: 16 10 13
-        192: 17 8 14
-        21037: 9 7 18 13
-        292: 11 6 16 20
-        """.Split(Environment.NewLine);
         var overallResult = Solve(input, ['+', '*', '|']);
         return overallResult.ToString();
     }
@@ -51,11 +29,10 @@ public class Day_07_Original : IPuzzle
     private static ulong Solve(string[] input, char[] operators)
     {
         var (maxLen, equations) = Parse(input);
-        var allCombos = GetOperatorCombinations(maxLen, operators);
         var overallResult = 0UL;
         foreach (var equation in equations)
         {
-            var operatorCombos = allCombos[equation.Values.Length - 1];
+            var operatorCombos = GetCombinations(new char[equation.Values.Length - 1], operators);
 
             foreach (var combo in operatorCombos)
             {
@@ -121,42 +98,32 @@ public class Day_07_Original : IPuzzle
 
     internal record Equation(ulong Target, char[] ValueChars, int[] Values);
 
-    private static Dictionary<int, List<string>> GetOperatorCombinations(int maxValue, char[] operators)
+    private static IEnumerable<string> GetCombinations(char[] array, char[] symbols)
     {
-        // Cache all possible permuations of the available operators
-        var result = new Dictionary<int, List<string>>(maxValue);
-        for (var i = 0; i < maxValue; i++)
+        foreach (var combo in Combinations(array, symbols, 0))
         {
-            var array = new char[i];
-            result[i] = GetCombinations(array, operators);
+            yield return combo;
         }
-
-        return result;
     }
 
-    private static List<string> GetCombinations(char[] array, char[] symbols)
-    {
-        var result = new List<string>();
-        Combinations(array, symbols, 0, result);
-        return result;
-    }
-
-    private static void Combinations(
+    private static IEnumerable<string> Combinations(
         char[] array,
         char[] symbols,
-        int index,
-        List<string> result)
+        int index)
     {
         if (index == array.Length)
         {
-            result.Add(new string(array));
-            return;
+            yield return new string(array);
+            yield break;
         }
 
         foreach (char symbol in symbols)
         {
             array[index] = symbol;
-            Combinations(array, symbols, index + 1, result);
+            foreach (var combination in Combinations(array, symbols, index + 1))
+            {
+                yield return combination;
+            }
         }
     }
 }
