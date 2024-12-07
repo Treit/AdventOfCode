@@ -28,7 +28,7 @@ public class Day_07_Original : IPuzzle
 
     private static ulong Solve(string[] input, char[] operators)
     {
-        var (maxLen, equations) = Parse(input);
+        var equations = Parse(input);
         var overallResult = 0UL;
         foreach (var equation in equations)
         {
@@ -73,10 +73,9 @@ public class Day_07_Original : IPuzzle
         return overallResult;
     }
 
-    private static (int, List<Equation>) Parse(string[] input)
+    private static List<Equation> Parse(string[] input)
     {
         var equations = new List<Equation>(input.Length);
-        var maxLen = 0;
 
         foreach (var line in input)
         {
@@ -86,14 +85,9 @@ public class Day_07_Original : IPuzzle
             var numChars = numList.ToCharArray();
             var nums = numList.Split(' ').Select(int.Parse).ToArray();
             equations.Add(new Equation(answer, numChars, nums));
-
-            if (numChars.Length > maxLen)
-            {
-                maxLen = numChars.Length;
-            }
         }
 
-        return (maxLen, equations);
+        return equations;
     }
 
     internal record Equation(ulong Target, char[] ValueChars, int[] Values);
