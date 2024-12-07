@@ -117,7 +117,7 @@ public class Day_07_Original : IPuzzle
             yield break;
         }
 
-        foreach (char symbol in symbols)
+        foreach (var symbol in symbols)
         {
             array[index] = symbol;
             foreach (var combination in Combinations(array, symbols, index + 1))
