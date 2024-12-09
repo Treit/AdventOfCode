@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>AdventOfCode.Puzzles._2024</RootNamespace>
+    <NoWarn>MA0008</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
