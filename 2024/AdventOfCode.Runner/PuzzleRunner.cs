@@ -101,6 +101,7 @@ public class PuzzleRunner
         var elapsed = sw.Elapsed;
 
         // run twice to get better timings
+        /*
         if (elapsed < TimeSpan.FromMilliseconds(500))
         {
             sw.Restart();
@@ -108,7 +109,7 @@ public class PuzzleRunner
             sw.Stop();
             elapsed = sw.Elapsed;
         }
-
+        */
         return new PuzzleResult(puzzleInfo, part1, part2, elapsed);
     }
 }

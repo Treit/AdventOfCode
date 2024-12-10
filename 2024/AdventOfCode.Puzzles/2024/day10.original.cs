@@ -1,10 +1,12 @@
 using System.Text;
-
+using SuperLinq;
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
 {
+    private static char[] s_directions = ['U', 'D', 'L', 'R'];
+
     public (string, string) Solve(PuzzleInput input)
     {
         var part1 = Part1(input.Lines);
@@ -14,6 +16,7 @@ public class Day_10_Original : IPuzzle
 
     public static string Part1(string[] input)
     {
+        /*
         input = """
         89010123
         78121874
@@ -23,58 +26,31 @@ public class Day_10_Original : IPuzzle
         32019012
         01329801
         10456732
-        """.Split(Environment.NewLine);
+        """.Split(Environment.NewLine);*/
         var trailHeads = GetAllTrailheads(input);
+        var summits = GetAllSummits(input);
+        var result = 0;
 
-        foreach (var head in trailHeads)
+        foreach (var trailhead in trailHeads)
         {
-            DoWalk('^', head, input, 0);
-            DoWalk('>', head, input, 0);
-            DoWalk('v', head, input, 0);
-            DoWalk('<', head, input, 0);
-        }
-
-        return "a";
-    }
-
-    private static int DoWalk(char dir, Point start, string[] input, int invalidTries)
-    {
-        var pos = start;
-        var updatedPos = TryMove(pos, dir, input);
-
-        if (updatedPos != pos)
-        {
-            Console.WriteLine($"Move {dir} from {pos} to {updatedPos} - height is {input[updatedPos.X][updatedPos.Y]}");
-
-            if (input[updatedPos.X][updatedPos.Y] == '9')
+            foreach (var summit in summits)
             {
-                Console.WriteLine("Reached the summit!");
-                return 1;
+                var currentPath = new List<Point>();
+                var allPaths = new List<List<Point>>();
+                var visited = new HashSet<Point>();
+                FindPaths(input, trailhead, summit, currentPath, allPaths, visited, true);
+
+                // How many different summits were reachable from this trailhead
+                result += allPaths.Count;
+
+                foreach (var path in allPaths)
+                {
+                    Console.WriteLine($"    ({trailhead.X},{trailhead.Y})->{string.Join("->", path.Select(x => $"({x.X},{x.Y})"))}");
+                }
             }
-
-            return DoWalk(dir, updatedPos, input, invalidTries);
         }
-        else
-        {
-            Console.WriteLine($"Can't move {dir} from {pos}");
-            var newDir = dir switch
-            {
-                '^' => '>',
-                '>' => 'v',
-                'v' => '<',
-                '<' => '^',
-                _ => throw new InvalidOperationException("Unexpected input")
-            };
 
-            invalidTries++;
-
-            if (invalidTries > 4)
-            {
-                return 0;
-            }
-
-            return DoWalk(newDir, pos, input, invalidTries);
-        }
+        return result.ToString();
     }
 
     public static string Part2(string[] input)
@@ -82,31 +58,69 @@ public class Day_10_Original : IPuzzle
         return "b";
     }
 
-    private static Point TryMove(Point pos, char dir, string[] input)
+    private static void FindPaths(
+        string[] input,
+        Point current,
+        Point dest,
+        List<Point> currentPath,
+        List<List<Point>> paths,
+        HashSet<Point> visited,
+        bool shortCircuit = false)
     {
-        var currVal = char.GetNumericValue(input[pos.X][pos.Y]);
-        var (newX, newY) = dir switch
-        {
-            '^' => (pos.X - 1, pos.Y),
-            '>' => (pos.X, pos.Y + 1),
-            'v' => (pos.X + 1, pos.Y),
-            '<' => (pos.X, pos.Y - 1),
-            _ => throw new InvalidOperationException("Unexpected input")
-        };
 
-        var canMove =
-            newX >= 0 &&
-            newX < input.Length &&
-            newY >= 0 &&
-            newY < input[newX].Length &&
-            char.GetNumericValue(input[newX][newY]) == currVal + 1;
-
-        if (canMove)
+        if (paths.Count > 0 && shortCircuit)
         {
-            return new Point(newX, newY);
+            // We only need to find one path and we already have.
+            return;
         }
 
-        return pos;
+        if (current == dest)
+        {
+            paths.Add(currentPath.ToList());
+            return;
+        }
+
+        foreach (var dir in s_directions)
+        {
+            var next = TryMove(input, current, dir, visited);
+            if (next != current)
+            {
+                visited.Add(next);
+                currentPath.Add(next);
+
+                // Recurse
+                FindPaths(input, next, dest, currentPath, paths, visited, shortCircuit);
+
+                // Backtrack
+                currentPath.Remove(next);
+                visited.Remove(next);
+
+            }
+        }
+    }
+
+    private static Point TryMove(string[] input, Point current, char dir, HashSet<Point> visited)
+    {
+        var nextPoint = dir switch
+        {
+            'U' => new Point(current.X - 1, current.Y),
+            'D' => new Point(current.X + 1, current.Y),
+            'L' => new Point(current.X, current.Y - 1),
+            'R' => new Point(current.X, current.Y + 1),
+            _ => throw new InvalidOperationException("Unexpected input"),
+        };
+
+        if (nextPoint.X >= 0
+            && nextPoint.X < input.Length
+            && nextPoint.Y >= 0
+            && nextPoint.Y < input[nextPoint.X].Length
+            && !visited.Contains(nextPoint)
+            && char.GetNumericValue(input[nextPoint.X][nextPoint.Y]) == char.GetNumericValue(input[current.X][current.Y]) + 1)
+        {
+            return nextPoint;
+        }
+
+        return current;
     }
 
     private static List<Point> GetAllTrailheads(string[] input)
@@ -127,5 +141,23 @@ public class Day_10_Original : IPuzzle
         return trailheads;
     }
 
-    record struct Point(int X, int Y);
+    private static List<Point> GetAllSummits(string[] input)
+    {
+        var summits = new List<Point>();
+        for (var i = 0; i < input.Length; i++)
+        {
+            for (var j = 0; j < input[i].Length; j++)
+            {
+                var height = input[i][j];
+                if (height == '9')
+                {
+                    summits.Add(new Point(i, j));
+                }
+            }
+        }
+
+        return summits;
+    }
+
+    private record struct Point(int X, int Y);
 }
