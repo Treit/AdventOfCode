@@ -5,7 +5,7 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
 {
-    private static char[] s_directions = ['U', 'D', 'L', 'R'];
+    private static readonly char[] s_directions = ['U', 'D', 'L', 'R'];
 
     public (string, string) Solve(PuzzleInput input)
     {
@@ -42,11 +42,6 @@ public class Day_10_Original : IPuzzle
 
                 // How many different summits were reachable from this trailhead
                 result += allPaths.Count;
-
-                foreach (var path in allPaths)
-                {
-                    Console.WriteLine($"    ({trailhead.X},{trailhead.Y})->{string.Join("->", path.Select(x => $"({x.X},{x.Y})"))}");
-                }
             }
         }
 
@@ -55,7 +50,38 @@ public class Day_10_Original : IPuzzle
 
     public static string Part2(string[] input)
     {
-        return "b";
+        /*
+        input = """
+        89010123
+        78121874
+        87430965
+        96549874
+        45678903
+        32019012
+        01329801
+        10456732
+        """.Split(Environment.NewLine);*/
+
+        var trailHeads = GetAllTrailheads(input);
+        var summits = GetAllSummits(input);
+        var result = 0;
+
+        foreach (var trailhead in trailHeads)
+        {
+            var trailHeadRating = 0;
+            foreach (var summit in summits)
+            {
+                var currentPath = new List<Point>();
+                var allPaths = new List<List<Point>>();
+                var visited = new HashSet<Point>();
+                FindPaths(input, trailhead, summit, currentPath, allPaths, visited, false);
+                trailHeadRating += allPaths.Count;
+            }
+
+            result += trailHeadRating;
+        }
+
+        return result.ToString();
     }
 
     private static void FindPaths(
