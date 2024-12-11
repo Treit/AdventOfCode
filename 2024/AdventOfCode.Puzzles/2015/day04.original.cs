@@ -56,6 +56,4 @@ public class Day_04_Original : IPuzzle
 
         return answer.ToString();
     }
-
-    private record struct Point(int X, int Y);
 }
