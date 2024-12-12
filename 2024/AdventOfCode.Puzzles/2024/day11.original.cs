@@ -37,29 +37,39 @@ public class Day_11_Original : IPuzzle
     public static string Part2(string input)
     {
         var stones = input.Trim().Split(' ').ToList();
-        var cache = new Dictionary<string, List<string>>();
-        var result = 0L;
+        var cache = new Dictionary<(string, int), ulong>();
+        var result = 0UL;
 
-        for (var i = 0; i < 75; i++)
+        foreach (var stone in stones)
         {
-            Console.WriteLine(string.Join(",", stones));
-            var tmpList = new List<string>();
-
-            foreach (var stone in stones)
-            {
-                if (!cache.ContainsKey(stone))
-                {
-                    var blinkResult = ProcessBlink(stone);
-                    cache.Add(stone, blinkResult);
-                }
-
-                tmpList.AddRange(cache[stone]);
-            }
-
-            stones = tmpList;
+            result += GetCount(stone, 1, 75, cache);
         }
 
         return result.ToString();
+    }
+
+    private static ulong GetCount(string stone, int blink, int maxBlink, Dictionary<(string, int), ulong> cache)
+    {
+        if (blink > maxBlink)
+        {
+            return 1;
+        }
+
+        if (cache.TryGetValue((stone, blink), out var existing))
+        {
+            return existing;
+        }
+
+        var result = 0UL;
+
+        var newStones = ProcessBlink(stone);
+        foreach (var newStone in newStones)
+        {
+            result += GetCount(newStone, blink + 1, maxBlink, cache);
+        }
+
+        cache.TryAdd((stone, blink), result);
+        return result;
     }
 
     private static List<string> ProcessBlink(string stone)
