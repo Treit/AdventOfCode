@@ -1,5 +1,5 @@
-var actions = Parse(File.ReadAllLines("input.txt"));
 var lights = GetLightGrid(1000, 1000);
+var actions = Parse(File.ReadAllLines("input.txt"));
 
 foreach (var action in actions)
 {
@@ -39,8 +39,7 @@ static List<LightAction> Parse(string[] input)
         var matches = re.Matches(line);
         if (matches.Count != 2)
         {
-            Console.WriteLine($"ERROR: {line}");
-            continue;
+            throw new InvalidOperationException($"Unexpected input: {line}");
         }
 
         var op = matches[0].Value switch
@@ -48,7 +47,7 @@ static List<LightAction> Parse(string[] input)
             "turn off" => "off",
             "turn on" => "on",
             "toggle" => "flip",
-            _ => throw new InvalidOperationException("Unexpected input"),
+            _ => throw new InvalidOperationException($"Unexpected input: {matches[0].Value}"),
         };
 
         var startX = int.Parse(matches[1].Groups[1].Value);
@@ -91,4 +90,9 @@ static bool[][] GetLightGrid(int rows, int cols)
     return lights;
 }
 
-internal record LightAction(string Op, int StartX, int StartY, int EndX, int EndY);
+internal record LightAction(
+    string Op,
+    int StartX,
+    int StartY,
+    int EndX,
+    int EndY);
