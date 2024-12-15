@@ -16,6 +16,7 @@
 appsettings.json
 
 # Ignore input files, they will be re-downloaded
+input.txt
 *.input.txt
 
 # BDN Artifacts
