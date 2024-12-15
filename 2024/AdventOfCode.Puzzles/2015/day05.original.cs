@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-
 namespace AdventOfCode.Puzzles._2015;
 
 [Puzzle(2015, 05, CodeType.Original)]
@@ -70,7 +67,9 @@ public class Day_05_Original : IPuzzle
             var prev = "";
             foreach (var pair in pairs)
             {
-                if (pair == prev)
+                // Handle overlapping triples (ignore) but make sure
+                // not to ignore four in a row
+                if (pair == prev && !line.Contains(prev + prev))
                 {
                     continue;
                 }
@@ -81,7 +80,13 @@ public class Day_05_Original : IPuzzle
             }
 
             var counts = normalizedPairs.CountBy(x => x);
-            Console.WriteLine(line);
+
+            var pairsStr = string.Join(
+                ",",
+                counts
+                .Where(x => x.Value > 1)
+                .Select(x => $"{x.Key} ({x.Value})"));
+
             var triples = GenerateTriples(line);
             var good = false;
 
