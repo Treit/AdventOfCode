@@ -11,6 +11,40 @@ var count = CountOfLightsOn(lights);
 
 Console.WriteLine(count);
 
+var brightLights = GetLightBrightnessGrid(1000, 1000);
+
+foreach (var action in actions)
+{
+    ProcessBrightnessAction(action, brightLights);
+}
+
+var brightness = GetTotalBrightness(brightLights);
+
+Console.WriteLine(brightness);
+
+static void ProcessBrightnessAction(LightAction action, ulong[][] lights)
+{
+    for (var i = action.StartX; i <= action.EndX; i++)
+    {
+        for (var j = action.StartY; j <= action.EndY; j++)
+        {
+            ref var target = ref lights[i][j];
+            if (action.Op == "on")
+            {
+                target += 1;
+            }
+            else if (action.Op == "off" && target > 0)
+            {
+                target -= 1;
+            }
+            else if (action.Op == "flip")
+            {
+                target += 2;
+            }
+        }
+    }
+}
+
 static void ProcessAction(LightAction action, bool[][] lights)
 {
     for (var i = action.StartX; i <= action.EndX; i++)
@@ -89,6 +123,34 @@ static bool[][] GetLightGrid(int rows, int cols)
 
     return lights;
 }
+
+
+static ulong[][] GetLightBrightnessGrid(int rows, int cols)
+{
+    var lights = new ulong[rows][];
+    for (var i = 0; i < cols; i++)
+    {
+        lights[i] = new ulong[cols];
+    }
+
+    return lights;
+}
+
+static ulong GetTotalBrightness(ulong[][] lights)
+{
+    var total = 0UL;
+
+    for (var i = 0; i < lights.Length; i++)
+    {
+        for (var j = 0; j < lights[i].Length; j++) 
+        {
+            total += lights[i][j];
+        }
+    }
+
+    return total;
+}
+
 
 internal record LightAction(
     string Op,

@@ -11,7 +11,7 @@
     <AnalysisLevel>latest-all</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>MA0008;CA5351</NoWarn>
+    <NoWarn>MA0008;CA1852;CA5351</NoWarn>
     <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
