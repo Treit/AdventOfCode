@@ -104,16 +104,15 @@ public class Day_02_Original : IPuzzle
 
     private static IEnumerable<string> Substrings(string source)
     {
-        for (int i = 0; i < source.Length; i++)
+        for (var i = 0; i < source.Length; i++)
         {
-            string substring = string.Empty;
+            var substring = string.Empty;
 
-            for (int j = i; j < source.Length; j++)
+            for (var j = i; j < source.Length; j++)
             {
                 substring += source[j];
                 yield return substring;
             }
         }
-
     }
 }
