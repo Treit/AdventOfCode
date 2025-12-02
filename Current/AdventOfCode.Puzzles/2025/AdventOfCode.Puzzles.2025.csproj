@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AdventOfCode.Puzzles._2024</RootNamespace>
+    <NoWarn>MA0008</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SuperLinq" />
+  </ItemGroup>
+</Project>
