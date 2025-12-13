@@ -2,8 +2,8 @@
   "profiles": {
     "AdventOfCode.Runner": {
       "commandName": "Project",
-      "workingDirectory": "$(ProjectDir)",
-      "commandLineArgs": "-y 2025 -d 2"
+      "commandLineArgs": "-y 2025 -d 3",
+      "workingDirectory": "$(ProjectDir)"
     }
   }
 }

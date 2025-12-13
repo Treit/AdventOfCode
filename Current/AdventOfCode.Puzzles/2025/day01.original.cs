@@ -74,14 +74,14 @@ public class Day_01_Original : IPuzzle
     }
 }
 
-internal class Node
+internal sealed class Node
 {
     public int Value { get; set; }
     public Node? Prev { get; set; }
     public Node? Next { get; set; }
 }
 
-internal class CircularBuffer
+internal sealed class CircularBuffer
 {
     private Node Current;
 
