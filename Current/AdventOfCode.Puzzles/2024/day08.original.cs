@@ -71,7 +71,6 @@ public class Day_08_Original : IPuzzle
 
                     var xDiff = Math.Abs(loc.X - otherLoc.X);
                     var yDiff = Math.Abs(loc.Y - otherLoc.Y);
-                    var dir = "";
                     Point antiNode = loc;
 
                     if (loc.X < otherLoc.X && loc.Y < otherLoc.Y)

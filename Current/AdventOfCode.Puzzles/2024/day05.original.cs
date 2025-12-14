@@ -175,7 +175,7 @@ public class Day_05_Original : IPuzzle
         return (orderings, updates);
     }
 
-    internal record Orderings(
+    internal sealed record Orderings(
         Dictionary<int, HashSet<int>> MustPrecede,
         Dictionary<int, HashSet<int>> MustFollow
     );

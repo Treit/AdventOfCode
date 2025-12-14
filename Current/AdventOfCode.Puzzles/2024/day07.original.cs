@@ -86,7 +86,7 @@ public class Day_07_Original : IPuzzle
         return equations;
     }
 
-    internal record Equation(ulong Target, char[] ValueChars, int[] Values);
+    internal sealed record Equation(ulong Target, char[] ValueChars, int[] Values);
 
     private static IEnumerable<string> GetCombinations(char[] array, char[] symbols)
     {
